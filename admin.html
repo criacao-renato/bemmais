@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Bem Mais - Painel Completo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen p-4 md:p-10">
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="max-w-md mx-auto bg-gray-800 p-8 rounded-3xl shadow-2xl text-center mt-10 border border-gray-700">
+        <img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-20 mx-auto mb-6">
+        <h1 class="text-xl font-black text-[#d2e32e] mb-6 uppercase italic">Acesso Administrativo</h1>
+        <div class="space-y-4">
+            <input type="text" id="user" placeholder="Usuário" class="w-full p-3 rounded-xl bg-gray-700 outline-none border-2 border-transparent focus:border-[#d2e32e] transition text-center">
+            <input type="password" id="pass" placeholder="Senha" class="w-full p-3 rounded-xl bg-gray-700 outline-none border-2 border-transparent focus:border-[#d2e32e] transition text-center">
+            <button onclick="check()" class="w-full bg-[#d2e32e] text-[#0073bc] font-black p-4 rounded-xl hover:bg-yellow-400 transition shadow-lg uppercase italic">Entrar</button>
+        </div>
+    </div>
+
+    <!-- PAINEL PRINCIPAL -->
+    <div id="admin-panel" class="max-w-6xl mx-auto hidden">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 bg-gray-800 p-6 rounded-3xl border border-gray-700 gap-4 shadow-xl">
+            <img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-12 md:h-16">
+            <button onclick="location.reload()" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-full font-bold uppercase transition text-xs">Sair do Painel</button>
+        </div>
+
+        <!-- SEÇÃO: VÍDEO EM DESTAQUE (MULTIFUNCIONAL) -->
+        <div class="mb-10 bg-gray-800 p-8 rounded-3xl border-t-8 border-white shadow-2xl">
+            <h2 class="text-xl font-black text-white mb-6 uppercase italic flex items-center gap-3">
+                <i class="fas fa-video"></i> Gerenciar Vídeo da Home (Qualquer Fonte)
+            </h2>
+            <form id="form-video" class="flex flex-col md:flex-row gap-4 mb-6">
+                <input type="text" id="video-url" placeholder="Link do YouTube, Facebook, MP4, Cloudinary..." required class="flex-1 p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                <button type="submit" id="btn-video" class="bg-white text-[#0073bc] font-black px-8 py-3 rounded-xl uppercase italic hover:bg-gray-200 transition">Salvar Vídeo</button>
+            </form>
+            
+            <div id="current-video-area" class="bg-black/30 p-4 rounded-2xl border border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="overflow-hidden">
+                    <p class="text-[10px] font-bold text-gray-500 uppercase">Link em uso no momento:</p>
+                    <p id="active-video-link" class="text-xs italic text-[#d2e32e] truncate max-w-md">Verificando...</p>
+                </div>
+                <button id="del-video-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-[10px] uppercase transition hidden">
+                    Remover Vídeo Atual
+                </button>
+            </div>
+            <p class="text-[9px] mt-4 text-gray-500">* Suporta YouTube, Facebook Reels, links diretos .mp4 e serviços de nuvem.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            
+            <!-- SEÇÃO DE PROMOÇÕES -->
+            <div class="bg-gray-800 p-8 rounded-3xl border-t-8 border-[#d2e32e] shadow-xl">
+                <h2 class="text-xl font-black text-[#d2e32e] mb-6 uppercase italic flex items-center gap-3"><i class="fas fa-ad"></i> Promoções</h2>
+                <form id="form-promo" class="space-y-4">
+                    <input type="text" id="promo-img" placeholder="Link da Imagem" required class="w-full p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                    <button type="submit" id="btn-promo" class="w-full bg-[#d2e32e] text-[#0073bc] font-black p-4 rounded-xl uppercase">Adicionar Banner</button>
+                </form>
+                <div id="lista-promos" class="grid grid-cols-2 gap-3 mt-6 overflow-y-auto max-h-60 no-scrollbar"></div>
+            </div>
+
+            <!-- SEÇÃO DE NOTÍCIAS -->
+            <div class="bg-gray-800 p-8 rounded-3xl border-t-8 border-[#0073bc] shadow-xl">
+                <h2 class="text-xl font-black text-[#0073bc] mb-6 uppercase italic flex items-center gap-3"><i class="fas fa-newspaper"></i> Portal de Notícias</h2>
+                <form id="form-noticia" class="space-y-4">
+                    <input type="text" id="t" placeholder="Título" required class="w-full p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="c" placeholder="Categoria" required class="w-full p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                        <input type="text" id="i" placeholder="Link Imagem" required class="w-full p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                    </div>
+                    <input type="text" id="u" placeholder="Link da Matéria Completa" required class="w-full p-3 rounded-xl bg-gray-700 outline-none border border-gray-600">
+                    <textarea id="r" placeholder="Resumo" required class="w-full p-3 rounded-xl bg-gray-700 h-20 outline-none border border-gray-600"></textarea>
+                    <button type="submit" id="btn-news" class="w-full bg-[#0073bc] text-white font-black p-4 rounded-xl uppercase italic">Publicar Notícia</button>
+                </form>
+                <div id="lista-noticias-admin" class="space-y-3 mt-6 overflow-y-auto max-h-80 no-scrollbar"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyBYFs-3ixu5QzPnjv-JWbz8G6kNiZ5_raE", authDomain: "bem-mais-noticias.firebaseapp.com", projectId: "bem-mais-noticias", storageBucket: "bem-mais-noticias.firebasestorage.app", messagingSenderId: "789310207840", appId: "1:789310207840:web:c7dcdaf632ab28c6fc1005", measurementId: "G-RFSEDRRS5F" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.check = () => {
+            if(document.getElementById('user').value === "bemmais" && document.getElementById('pass').value === "Pqhox5xz@") {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+                carregarTudo();
+            } else { alert("Senha incorreta!"); }
+        };
+
+        function carregarTudo() { carregarPromos(); carregarNoticias(); carregarVideoAtual(); }
+
+        // --- VÍDEO DINÂMICO ---
+        async function carregarVideoAtual() {
+            const q = query(collection(db, "video_destaque"), orderBy("data", "desc"), limit(1));
+            const snap = await getDocs(q);
+            const linkDisplay = document.getElementById('active-video-link');
+            const delBtn = document.getElementById('del-video-btn');
+
+            if(!snap.empty) {
+                const vid = snap.docs[0];
+                linkDisplay.innerText = vid.data().url;
+                delBtn.classList.remove('hidden');
+                delBtn.onclick = async () => {
+                    if(confirm("Remover vídeo atual?")) { await deleteDoc(doc(db, "video_destaque", vid.id)); location.reload(); }
+                };
+            } else { linkDisplay.innerText = "Nenhum vídeo salvo (Usando padrão)."; delBtn.classList.add('hidden'); }
+        }
+
+        document.getElementById('form-video').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "video_destaque"), { url: document.getElementById('video-url').value, data: new Date() });
+            alert("Vídeo atualizado!"); location.reload();
+        });
+
+        // --- PROMOS E NOTÍCIAS (MANTIDO) ---
+        document.getElementById('form-promo').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "promocoes"), { imagem: document.getElementById('promo-img').value, data: new Date() });
+            location.reload();
+        });
+
+        async function carregarPromos() {
+            const snap = await getDocs(query(collection(db, "promocoes"), orderBy("data", "desc")));
+            snap.forEach(d => {
+                const div = document.createElement('div');
+                div.className = "relative cursor-pointer rounded-xl overflow-hidden border-2 border-transparent hover:border-red-500 shadow-lg";
+                div.innerHTML = `<img src="${d.data().imagem}" class="h-24 w-full object-cover opacity-60"><div class="absolute inset-0 flex items-center justify-center text-[8px] font-black bg-red-600/40 opacity-0 hover:opacity-100 uppercase">Excluir</div>`;
+                div.onclick = async () => { if(confirm("Excluir promo?")) { await deleteDoc(doc(db, "promocoes", d.id)); location.reload(); } };
+                document.getElementById('lista-promos').appendChild(div);
+            });
+        }
+
+        document.getElementById('form-noticia').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await addDoc(collection(db, "noticias"), { titulo: document.getElementById('t').value, categoria: document.getElementById('c').value, imagem: document.getElementById('i').value, url: document.getElementById('u').value, resumo: document.getElementById('r').value, data: new Date() });
+            location.reload();
+        });
+
+        async function carregarNoticias() {
+            const snap = await getDocs(query(collection(db, "noticias"), orderBy("data", "desc")));
+            const cont = document.getElementById('lista-noticias-admin');
+            snap.forEach(d => {
+                const item = d.data();
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-3 bg-gray-700/40 rounded-xl border border-gray-600 gap-3";
+                div.innerHTML = `<div class="flex items-center gap-3 overflow-hidden"><img src="${item.imagem}" class="h-10 w-10 rounded object-cover"><p class="text-[11px] font-bold truncate uppercase italic">${item.titulo}</p></div><button class="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1 rounded text-[9px] uppercase transition flex-shrink-0">Excluir</button>`;
+                div.querySelector('button').onclick = async () => { if(confirm("Excluir notícia?")) { await deleteDoc(doc(db, "noticias", d.id)); location.reload(); } };
+                cont.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>

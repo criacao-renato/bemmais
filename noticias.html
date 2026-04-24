@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8"><title>Notícias - Bem Mais 104,7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style> :root { --v: #d2e32e; --a: #0073bc; --ae: #004a7a; } body { font-family: 'Montserrat', sans-serif; }</style>
+</head>
+<body class="bg-gray-100 pb-24 md:pb-0">
+    <audio id="radioStream" src="https://e-spo-104.fabricahost.com.br/104fmitapeva?f=1777061592N01KQ0HZZMD5SGXBJZYY1E8712B&tid=01KQ0HZZMD0Z0JC0K1CV0G2SXC"></audio>
+    
+    <div class="bg-[#004a7a] text-white py-2 px-4 font-bold text-center text-xs">
+        <div class="max-w-7xl mx-auto flex justify-center gap-10">
+            <span><i class="fab fa-whatsapp"></i> 15 99620-6127</span>
+            <span><i class="far fa-envelope"></i> redecristalfm@gmail.com</span>
+            <span><i class="fas fa-map-marker-alt"></i> Itapeva - SP</span>
+        </div>
+    </div>
+
+    <header class="bg-[#d2e32e] py-4 px-6 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html"><img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-16 md:h-20"></a>
+            <nav class="flex space-x-6 md:space-x-8 font-black italic uppercase text-[#0073bc] tracking-widest text-xs">
+                <a href="index.html" class="hover:text-white transition">Início</a>
+                <a href="programacao.html" class="hover:text-white transition">Programação</a>
+                <a href="noticias.html" class="text-white underline">Notícias</a>
+                <a href="contato.html" class="hover:text-white transition">Contato</a>
+            </nav>
+            <button onclick="toggleRadio()" class="bg-[#0073bc] text-white px-6 py-2 rounded-full font-black text-xs italic">OUÇA AO VIVO</button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-12 px-6">
+        <h2 class="text-4xl font-black italic text-[#0073bc] uppercase text-center mb-10">Últimas <span class="bg-[#0073bc] text-[#d2e32e] px-2">Notícias</span></h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="lista-noticias"></div>
+    </main>
+
+    <footer class="bg-blue-900 pt-16 pb-12 px-8 text-white text-center">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-12">
+                <a href="https://www.canva.com/design/DAHF5ypmj4k/-PF6Gifeh9er7umQrKZOdA/view?utm_content=DAHF5ypmj4k&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h79b61cd0c3" target="_blank">
+                    <img src="https://i.postimg.cc/tRSsYBYb/001.png" class="w-full rounded-xl shadow-lg border-2 border-white/20">
+                </a>
+            </div>
+            <img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-20 mx-auto mb-4">
+            <h2 class="text-3xl font-black italic uppercase italic">Na frequência do bem!</h2>
+        </div>
+    </footer>
+
+    <div id="stickyPlayer" class="fixed bottom-0 left-0 w-full bg-[#0073bc] text-white p-3 z-[100] border-t-4 border-[#d2e32e] flex justify-between items-center px-6 transform translate-y-full transition-transform duration-500 shadow-2xl">
+        <div class="flex items-center gap-4"><img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-10"><div><p class="text-[10px] uppercase font-bold text-[#d2e32e]">No ar:</p><p class="text-sm font-bold italic">BEM MAIS 104,7 FM</p></div></div>
+        <button onclick="toggleRadio()" class="text-4xl text-[#d2e32e]"><i id="stickyPlayIcon" class="fas fa-pause-circle"></i></button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        const fc = { apiKey: "AIzaSyBYFs-3ixu5QzPnjv-JWbz8G6kNiZ5_raE", authDomain: "bem-mais-noticias.firebaseapp.com", projectId: "bem-mais-noticias", storageBucket: "bem-mais-noticias.firebasestorage.app", messagingSenderId: "789310207840", appId: "1:789310207840:web:c7dcdaf632ab28c6fc1005", measurementId: "G-RFSEDRRS5F" };
+        const app = initializeApp(fc); const db = getFirestore(app);
+        async function load() {
+            const q = query(collection(db, "noticias"), orderBy("data", "desc"));
+            const snap = await getDocs(q); const cont = document.getElementById('lista-noticias'); cont.innerHTML = "";
+            snap.forEach(doc => { const d = doc.data(); cont.innerHTML += `<div class="bg-white rounded-2xl overflow-hidden shadow-lg border-b-4 border-[#0073bc]"><img src="${d.imagem}" class="w-full h-48 object-cover"><div class="p-6"><span class="text-[10px] font-bold text-[#0073bc] uppercase bg-gray-100 px-2 py-1 rounded">${d.categoria}</span><h2 class="text-xl font-black mt-2 leading-tight">${d.titulo}</h2><p class="text-gray-600 text-sm mt-4 line-clamp-3">${d.resumo}</p><a href="${d.url || '#'}" target="_blank" class="inline-block mt-6 text-[#0073bc] font-black text-sm uppercase hover:underline">Leia mais +</a></div></div>`; });
+        } load();
+        const audio = document.getElementById('radioStream');
+        window.toggleRadio = () => { if (audio.paused) { audio.play(); document.getElementById('stickyPlayer').classList.remove('translate-y-full'); document.getElementById('stickyPlayIcon').className='fas fa-pause-circle'; } else { audio.pause(); document.getElementById('stickyPlayIcon').className='fas fa-play-circle'; } }
+    </script>
+</body>
+</html>
