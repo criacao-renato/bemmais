@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem Mais 104,7 - Na frequência do bem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root { --v: #d2e32e; --a: #0073bc; --ae: #004a7a; }
+        body { font-family: 'Montserrat', sans-serif; }
+        .bg-v { background-color: var(--v); } .bg-a { background-color: var(--a); } .bg-ae { background-color: var(--ae); }
+        .text-a { color: var(--a); } .text-v { color: var(--v); }
+        .carousel-track { display: flex; transition: transform 0.5s ease-in-out; }
+        .video-container { position: relative; width: 100%; background: #000; margin: 0 auto; overflow: hidden; border-radius: 12px; }
+        @media (min-width: 768px) { .video-container { aspect-ratio: 16 / 9; max-width: 850px; } }
+        @media (max-width: 767px) { .video-container { aspect-ratio: 9 / 16; max-width: 320px; } }
+        .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .pulse { animation: p 2s infinite; } @keyframes p { 0% { box-shadow: 0 0 0 0px rgba(210, 227, 46, 0.7); } 100% { box-shadow: 0 0 0 15px rgba(210, 227, 46, 0); } }
+    </style>
+</head>
+<body class="bg-gray-50 pb-24 md:pb-0 text-gray-800">
+    <audio id="radioStream" src="https://e-spo-105.fabricahost.com.br/104fmitapeva?f=1776512188N01KPG61G9HNFY7ZAHTH984TA62&tid=01KPG61G9H9W3DY1SA6XBKX8DM"></audio>
+
+    <div class="bg-ae text-white py-2 px-4 font-bold text-center text-[10px] md:text-xs">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-center items-center gap-4 md:gap-10">
+            <a href="https://wa.me/5515996206127" target="_blank" class="hover:text-v transition"><i class="fab fa-whatsapp"></i> 15 99620-6127</a>
+            <span><i class="far fa-envelope"></i> redecristalfm@gmail.com</span>
+            <span><i class="fas fa-map-marker-alt"></i> Itapeva - SP</span>
+        </div>
+    </div>
+
+    <header class="bg-v py-4 px-6 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <a href="index.html"><img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" alt="Logo" class="h-16 md:h-20 drop-shadow-md"></a>
+            <nav class="flex space-x-6 md:space-x-8 font-black italic uppercase text-a tracking-widest text-xs md:text-sm">
+                <a href="index.html" class="text-white underline">Início</a>
+                <a href="programacao.html" class="hover:text-white transition">Programação</a>
+                <a href="noticias.html" class="hover:text-white transition">Notícias</a>
+                <a href="contato.html" class="hover:text-white transition">Contato</a>
+            </nav>
+            <button onclick="toggleRadio()" class="bg-a text-white px-6 py-2 rounded-full font-black italic text-xs pulse">OUÇA AO VIVO</button>
+        </div>
+    </header>
+
+    <!-- VÍDEO DINÂMICO -->
+    <section class="bg-[#181a1d] py-10 px-4">
+        <div class="video-container shadow-2xl border-4 border-[#2d343c]" id="video-wrapper">
+            <div class="flex items-center justify-center h-full text-white opacity-20"><i class="fas fa-spinner fa-spin text-3xl"></i></div>
+        </div>
+    </section>
+
+    <!-- CARROSSEL PROMOÇÕES -->
+    <section class="bg-white py-10 px-4 overflow-hidden border-y border-gray-100">
+        <div class="max-w-6xl mx-auto relative group text-center">
+            <h3 class="text-a font-black italic uppercase mb-6 text-sm tracking-widest">Promoções Bem Mais</h3>
+            <div class="overflow-hidden rounded-3xl shadow-2xl border-4 border-a"><div id="promo-carousel" class="carousel-track"></div></div>
+            <button onclick="movePromo(-1)" class="absolute left-0 top-1/2 bg-a text-white p-3 rounded-r-2xl z-10"><i class="fas fa-chevron-left"></i></button>
+            <button onclick="movePromo(1)" class="absolute right-0 top-1/2 bg-a text-white p-3 rounded-l-2xl z-10"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- CARROSSEL NOTÍCIAS -->
+    <section class="bg-gray-100 py-16 px-4">
+        <div class="max-w-7xl mx-auto overflow-hidden relative">
+            <h2 class="text-2xl font-black italic text-a uppercase mb-8 px-4">Últimas <span class="bg-a text-v px-2">Notícias</span></h2>
+            <div class="relative">
+                <div id="news-track" class="carousel-track gap-6 px-4"></div>
+                <button onclick="moveNews(-1)" class="absolute -left-2 top-1/2 bg-white shadow-lg p-3 rounded-full text-a z-10"><i class="fas fa-chevron-left"></i></button>
+                <button onclick="moveNews(1)" class="absolute -right-2 top-1/2 bg-white shadow-lg p-3 rounded-full text-a z-10"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOCUTORES -->
+    <section class="bg-v py-16 px-6">
+        <div class="max-w-4xl mx-auto text-center grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="rounded-3xl overflow-hidden border-4 border-white shadow-2xl aspect-[3/4] bg-a relative">
+                <img src="https://i.postimg.cc/0jypYhCv/locutor1.jpg" class="w-full h-full object-cover"><div class="absolute bottom-0 w-full bg-white py-4 font-black text-a uppercase italic text-xl">Paulo Kawamura</div>
+            </div>
+            <div class="rounded-3xl overflow-hidden border-4 border-white shadow-2xl aspect-[3/4] bg-a relative">
+                <img src="https://i.postimg.cc/5NDBZ7mG/marcos-silva.jpg" class="w-full h-full object-cover"><div class="absolute bottom-0 w-full bg-white py-4 font-black text-a uppercase italic text-xl">Marcos Silva</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-blue-900 pt-16 pb-12 px-8 text-white text-center">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-12"><a href="https://www.canva.com/..." target="_blank"><img src="https://i.postimg.cc/tRSsYBYb/001.png" class="w-full rounded-xl shadow-lg border-2 border-white/20"></a></div>
+            <img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-24 mx-auto mb-6"><h2 class="text-4xl font-black uppercase italic tracking-tighter">Na frequência do bem!</h2>
+            <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <a href="https://apps.apple.com/..." target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="h-10"></a>
+                <a href="https://play.google.com/..." target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="h-10"></a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="stickyPlayer" class="fixed bottom-0 left-0 w-full bg-a text-white p-3 z-[100] border-t-4 border-v flex justify-between items-center px-6 transform translate-y-full transition-transform duration-500 shadow-2xl">
+        <div class="flex items-center gap-4"><img src="https://i.postimg.cc/tJj3sYsx/Logo-Bem-Mais.png" class="h-10"><div><p class="text-[10px] uppercase font-bold text-v leading-none">No ar:</p><p class="text-sm font-bold italic">BEM MAIS 104,7 FM</p></div></div>
+        <button onclick="toggleRadio()" class="text-4xl text-v"><i id="stickyPlayIcon" class="fas fa-pause-circle"></i></button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        const fc = { apiKey: "AIzaSyBYFs-3ixu5QzPnjv-JWbz8G6kNiZ5_raE", authDomain: "bem-mais-noticias.firebaseapp.com", projectId: "bem-mais-noticias", storageBucket: "bem-mais-noticias.firebasestorage.app", messagingSenderId: "789310207840", appId: "1:789310207840:web:c7dcdaf632ab28c6fc1005", measurementId: "G-RFSEDRRS5F" };
+        const app = initializeApp(fc); const db = getFirestore(app);
+
+        // LOGICA DE IDENTIFICAÇÃO DE VÍDEO
+        function generateVideoHTML(url) {
+            // YouTube
+            if (url.includes("youtube.com") || url.includes("youtu.be")) {
+                let id = url.includes("v=") ? url.split("v=")[1].split("&")[0] : url.split("/").pop();
+                return `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            }
+            // Facebook
+            if (url.includes("facebook.com")) {
+                return `<iframe src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=0&t=0" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>`;
+            }
+            // Cloudinary / MP4 Direto
+            return `<video controls autoplay muted loop playsinline><source src="${url}" type="video/mp4">Seu navegador não suporta vídeos.</video>`;
+        }
+
+        async function fetchVideo() {
+            const snap = await getDocs(query(collection(db, "video_destaque"), orderBy("data", "desc"), limit(1)));
+            const wrapper = document.getElementById('video-wrapper');
+            let url = "https://www.facebook.com/reel/2463040820739971"; // Default
+            if(!snap.empty) url = snap.docs[0].data().url;
+            wrapper.innerHTML = generateVideoHTML(url);
+        }
+
+        async function fetchPromos() {
+            const track = document.getElementById('promo-carousel');
+            const snap = await getDocs(query(collection(db, "promocoes"), orderBy("data", "desc")));
+            if (snap.empty) { track.innerHTML = `<div class="min-w-full"><img src="https://i.postimg.cc/tRSsYBYb/001.png" class="w-full"></div>`; return; }
+            track.innerHTML = ""; snap.forEach(doc => { track.innerHTML += `<div class="min-w-full"><img src="${doc.data().imagem}" class="w-full h-auto object-cover"></div>`; });
+            if(snap.size > 1) setInterval(() => window.movePromo(1), 5000);
+        }
+
+        async function fetchNews() {
+            const track = document.getElementById('news-track');
+            const snap = await getDocs(query(collection(db, "noticias"), orderBy("data", "desc"), limit(6)));
+            track.innerHTML = "";
+            snap.forEach(doc => { const d = doc.data(); track.innerHTML += `<div class="min-w-[85%] md:min-w-[31%] bg-white rounded-2xl overflow-hidden shadow-md border-b-4 border-a transition hover:scale-[1.02]"><img src="${d.imagem}" class="w-full h-40 object-cover"><div class="p-4"><h3 class="font-black mt-2 leading-tight text-sm line-clamp-2">${d.titulo}</h3><a href="${d.url || '#'}" target="_blank" class="inline-block mt-4 text-xs font-bold text-a uppercase">Leia mais +</a></div></div>`; });
+        }
+
+        fetchVideo(); fetchPromos(); fetchNews();
+
+        let pIdx = 0; window.movePromo = (dir) => { 
+            const track = document.getElementById('promo-carousel'); const total = track.children.length;
+            pIdx = (pIdx + dir + total) % total; track.style.transform = `translateX(-${pIdx * 100}%)`; 
+        };
+        let nIdx = 0; window.moveNews = (dir) => { const track = document.getElementById('news-track'); const i = track.children.length; const v = window.innerWidth < 768 ? 1 : 3; if(i <= v) return; nIdx = Math.max(0, Math.min(nIdx + dir, i - v)); track.style.transform = `translateX(-${nIdx * (window.innerWidth < 768 ? 85 : 33.33)}%)`; };
+    </script>
+    <script>
+        const audio = document.getElementById('radioStream');
+        function toggleRadio() { if (audio.paused) { audio.play(); document.getElementById('stickyPlayer').classList.remove('translate-y-full'); document.getElementById('stickyPlayIcon').className='fas fa-pause-circle'; } else { audio.pause(); document.getElementById('stickyPlayIcon').className='fas fa-play-circle'; } }
+    </script>
+</body>
+</html>
